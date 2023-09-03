@@ -1,0 +1,43 @@
+{
+    "extension_name": { "message": "书签导航栏" },
+    "extension_description": { "message": "一个轻量级的书签导航&管理工具" },
+
+    "bookmarks_empty": { "message": "书签栏为空" },
+
+    "settings_title": { "message": "设置" },
+    "setting_button_reset": { "message": "恢复默认值" },
+    "setting_theme": { "message": "主题" },
+    "setting_theme_system": { "message": "跟随系统" },
+    "setting_theme_light": { "message": "亮色" },
+    "setting_theme_dark": { "message": "暗色" },
+    "setting_popup_size": { "message": "弹窗尺寸" },
+    "setting_popup_size_pattern": {"message": "宽度 X 高度"},
+    "setting_tab_open_policy": {"message": "书签打开策略"},
+    "setting_link_open_policy_newtab": {"message": "新标签页"},
+    "setting_link_open_policy_overwrite_all": {"message": "覆盖当前页"},
+    "setting_link_open_policy_overwrite_newtab": {"message": "仅覆盖空白页"},
+    "setting_bookmark_root": {"message": "书签根目录"},
+    "setting_bookmark_root_root": {"message": "根"},
+    "setting_bookmark_root_bookmarks_bar": {"message": "书签栏"},
+    "setting_bookmark_root_other_bookmarks": {"message": "其它书签"},
+    "setting_search_include_url": { "message": "搜索时考虑链接地址" },
+    "setting_enable_double_click": { "message": "双击以级联打开/关闭目录" },
+    "setting_double_click_detect_delay": { "message": "双击检测时延 (毫秒)" },
+    "setting_show_scroll_to_top_button": { "message": "显示滚动到边界按钮" },
+    "setting_link_open_bookmark_manager": { "message": "打开Chrome书签管理器" },
+
+    "link_editor_title": { "message": "编辑书签" },
+    "link_editor_button_save": { "message": "保存" },
+    "link_editor_button_cancel": { "message": "取消" },
+    "link_editor_button_delete": { "message": "删除" },
+    "link_editor_open_bookmark_in_background": { "message": "在后台打开书签" },
+    "link_editor_open_bookmark_in_private": { "message": "在无痕窗口中打开书签" },
+
+    "folder_editor_title": { "message": "编辑目录" },
+    "folder_editor_button_save": { "message": "保存" },
+    "folder_editor_button_cancel": { "message": "取消" },
+    "folder_editor_button_remove": { "message": "删除" },
+    "folder_editor_open_folder_links": { "message": "在新标签页中打开全部书签" },
+    "folder_editor_group_open_folder_links": { "message": "在新标签组中打开全部书签" },
+    "folder_editor_open_folder_in_manager": { "message": "在Chrome书签管理器中查看" }
+}

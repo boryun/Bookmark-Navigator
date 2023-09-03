@@ -8,7 +8,7 @@
     </head>
 
     <body>
-        <div class="wrapper" style="display:none">
+        <div class="wrapper">
             <aside class="settings"><div>
                 <div class="aside__title">
                     <h2 data-text="settings_title"></h2>
@@ -92,34 +92,9 @@
                     </div>
                     <!-- link to bookmark manager -->
                     <div class="flexrow with-top-separator">
-                        <a href="#" class="link-out" id="settingOpenBookmarkManager" data-text="setting_link_open_bookmark_manager"></a>
+                        <a href="#" class="link link--bookmark-manager" id="settingOpenBookmarkManager" data-text="setting_link_open_bookmark_manager"></a>
                     </div>
                 </form>
-            </aside>
-
-            <aside class="helps">
-                <div class="aside__title"><h2 data-text="helps_title"></h2></div>
-                <ul class="help__controls">
-                    <li class="flexrow flexrow--stretch with-top-separator">
-                        <div class="description"><span data-text="help_control_lmb"></span></div>
-                        <div class="kbd-combination"><kbd>LMB</kbd></div>
-                    </li>
-                    <li class="flexrow flexrow--stretch with-top-separator">
-                        <div class="description"><span data-text="help_control_rmb"></span></div>
-                        <div class="kbd-combination"><kbd>RMB</kbd></div>
-                    </li>
-                    <li class="flexrow flexrow--stretch with-top-separator">
-                        <div class="description"><span data-text="help_control_refresh"></span></div>
-                        <div class="kbd-combination"><kbd class="help__refresh">&nbsp;</kbd></div>
-                    </li>
-                </ul>
-                <div class="flexrow with-top-separator">
-                    <button id="donate" class="submit button with-leading-icon" tabindex="1" data-text="help_link_donate"></button>
-                    <button id="github" class="button with-leading-icon" tabindex="1" data-text="help_link_github"></button>
-                </div>
-                <div class="plugin-version">
-                    <span data-text="help_version"></span>&nbsp;:&nbsp;<span id="version"></span>
-                </div>
             </aside>
 
             <aside class="link-editor">
@@ -130,15 +105,15 @@
                         <input type="url" name="url" value="" id="linkEditorBookmarkUrl" tabindex="1" required />
                     </div>
                     <div class="edit__row">
-                        <button id="linkEditorUpdateButton" class="submit button" type="submit" data-text="link_editor_button_save"></button>
+                        <button id="linkEditorUpdateButton" class="button submit" type="submit" data-text="link_editor_button_save"></button>
                         <button id="linkEditorCloseButton" class="button" type="button" data-text="link_editor_button_cancel"></button>
-                        <button id="linkEditorRemoveButton" class="button" type="button" data-text="link_editor_button_delete"></button>
+                        <button id="linkEditorRemoveButton" class="button danger" type="button" data-text="link_editor_button_delete"></button>
                     </div>
                     <div class="edit__row with-top-separator">
-                        <a href="#" class="link-out-tabs" id="linkEditorOpenInBackground" data-text="link_editor_open_bookmark_in_background"></a>
+                        <a href="#" class="link link--newtab" id="linkEditorOpenInBackground" data-text="link_editor_open_bookmark_in_background"></a>
                     </div>
                     <div class="edit__row with-top-separator">
-                        <a href="#" class="link-out-private" id="linkEditorOpenInPrivate" data-text="link_editor_open_bookmark_in_private"></a>
+                        <a href="#" class="link link--private" id="linkEditorOpenInPrivate" data-text="link_editor_open_bookmark_in_private"></a>
                     </div>
                 </form>
             </aside>
@@ -150,18 +125,18 @@
                         <input type="text" name="title" value="" id="folderEditorFolderTitle" class="with-leading-icon" tabindex="1" required />
                     </div>
                     <div class="edit__row">
-                        <button id="folderEditorUpdateButton" class="submit button" type="submit" data-text="folder_editor_button_save"></button>
+                        <button id="folderEditorUpdateButton" class="button submit" type="submit" data-text="folder_editor_button_save"></button>
                         <button id="folderEditorCloseButton" class="button" type="button" data-text="folder_editor_button_cancel"></button>
-                        <button id="folderEditorRemoveButton" class="button" type="button" data-text="folder_editor_button_remove"></button>
+                        <button id="folderEditorRemoveButton" class="button danger" type="button" data-text="folder_editor_button_remove"></button>
                     </div>
                     <div class="edit__row with-top-separator">
-                        <a href="#" class="link-out-tabs" id="folderEditorOpenAll" data-text="folder_editor_open_folder_links"></a>
+                        <a href="#" class="link link--open-all" id="folderEditorOpenAll" data-text="folder_editor_open_folder_links"></a>
                     </div>
                     <div class="edit__row with-top-separator">
-                        <a href="#" class="link-out-tabs" id="folderEditorGroupOpenAll" data-text="folder_editor_group_open_folder_links"></a>
+                        <a href="#" class="link link--group-open-all" id="folderEditorGroupOpenAll" data-text="folder_editor_group_open_folder_links"></a>
                     </div>
                     <div class="edit__row with-top-separator">
-                        <a href="chrome://bookmarks/" class="link-out-bookmark-manager" id="folderEditorManagerLink" data-text="folder_editor_open_folder_in_manager"></a>
+                        <a href="chrome://bookmarks/" class="link link--manage-folder" id="folderEditorManagerLink" data-text="folder_editor_open_folder_in_manager"></a>
                     </div>
                 </form>
             </aside>
@@ -169,7 +144,6 @@
             <div class="header">
                 <div class="header__search"><input type="search" id="search" class="with-leading-icon" tabindex="1" /></div>
                 <div class="header__controls control">
-                    <button class="control__item control__item--help" id="controlButtonHelp" tabindex="4"></button>
                     <button class="control__item control__item--refresh" id="controlButtonRefresh" tabindex="3"></button>
                     <button class="control__item control__item--settings" id="controlButtonSetting" tabindex="2"></button>
                 </div>
@@ -180,7 +154,7 @@
             <div class="scroller" id="scrollButton"></div>
         </div>
 
-        <script src="scripts/sortable.js"></script>
+        <script src="scripts/sortable.min.js"></script>
         <script src="scripts/popup.js"></script>
     </body>
 </html>

@@ -1,8 +1,6 @@
 "use strict";
 
 const app = {
-    mainfest: chrome.runtime.getManifest(),
-
     i18n: function () {
         document.querySelectorAll("[data-text]").forEach((container) => {
             container.innerText = app.getI18n(container.dataset.text);
@@ -28,7 +26,6 @@ const app = {
         controlButtons: document.querySelectorAll(".control__item"),
         controlButtonSetting: document.getElementById("controlButtonSetting"),
         controlButtonRefresh: document.getElementById("controlButtonRefresh"),
-        controlButtonHelp: document.getElementById("controlButtonHelp"),
 
         // bookmarks
         bookmark: document.getElementById("bookmarks"),
@@ -50,10 +47,6 @@ const app = {
         settingEnableDoubleClick: document.getElementById("settingEnableDoubleClick"),
         settingDoubleClickDetectDelay: document.getElementById("settingDoubleClickDetectDelay"),
         settingShowScrollToTopButton: document.getElementById("settingShowScrollToTopButton"),
-
-        // help panel
-        helps: document.querySelector(".helps"),
-        versionContainer: document.getElementById("version"),
 
         // link editor
         linkEditor: document.querySelector(".link-editor"),
@@ -88,7 +81,7 @@ const app = {
             searchIncludeUrl: false,
             enableDoubleClick: false,
             doubleClickDetectDelay: 230,
-            showScrollButton: false,
+            showScrollButton: true,
             scrollPosition: 0,
             openedFolders: []
         },
@@ -204,12 +197,6 @@ const app = {
 
             init: function () {
                 app.styles.theme.adjustTheme();
-                app.dom.themeLink.onload = function () {
-                    app.dom.wrapper.style.display = "block";
-                    app.styles.adjustHeight();
-                    app.bookmarks.scroll.scrollToSavedPosition();
-                    app.dom.searchInput.focus();
-                }
             },
 
             adjustTheme: function () {
@@ -259,12 +246,6 @@ const app = {
             app.dom.controlButtonRefresh.addEventListener("click", () => {
                 if (app.headerControls.refreshButton.isAnimationPlaying()) { return; }
                 app.refresh(true);
-            });
-
-            app.dom.controlButtonHelp.addEventListener("click", (event) => {
-                let state = event.target.classList.toggle("control__item--active");
-                if (state) { app.asides.helps.openPanel(); }
-                else { app.asides.helps.closePanel(); }
             });
         }
     },
@@ -758,14 +739,12 @@ const app = {
             app.asides.settings.closePanel();
             app.asides.linkEditor.closePanel();
             app.asides.folderEditor.closePanel();
-            app.asides.helps.closePanel();
         },
 
         currentSize: function () {
             if (app.asides.settings.isPanelOpening()) { return app.dom.setting.offsetHeight; }
             else if (app.asides.linkEditor.isPanelOpening()) { return app.dom.linkEditor.offsetHeight; }
             else if (app.asides.folderEditor.isPanelOpening()) { return app.dom.folderEditor.offsetHeight; }
-            else if (app.asides.helps.isPanelOpening()) { return app.dom.helps.offsetHeight; }
             else { return 0; }
         },
 
@@ -1114,25 +1093,6 @@ const app = {
                     window.close();
                 });
             }
-        },
-
-        helps: {
-            isPanelOpening: function () {
-                return app.dom.helps.classList.contains("active");
-            },
-            openPanel: function () {
-                if (app.asides.helps.isPanelOpening()) { return; }
-                app.asides.closeAllPanels();
-                app.dom.helps.classList.add("active");
-                app.styles.adjustHeight(app.dom.helps.offsetHeight);
-            },
-            closePanel: function () {
-                if (!app.asides.helps.isPanelOpening()) { return; }
-                app.dom.helps.classList.remove("active");
-                app.dom.controlButtonHelp.classList.remove("control__item--active");
-                app.styles.adjustHeight();
-                app.dom.searchInput.focus();
-            }
         }
     },
 
@@ -1155,7 +1115,11 @@ const app = {
             app.styles.init();
             app.headerControls.init();
             app.asides.init();
-            app.bookmarks.init();
+            app.bookmarks.init().then(() => {
+                app.styles.adjustHeight();
+                app.bookmarks.scroll.scrollToSavedPosition();
+                app.dom.searchInput.focus();
+            });
         });
     }
 }

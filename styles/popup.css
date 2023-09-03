@@ -168,6 +168,11 @@ kbd {
     border-color: var(--primary-color);
     color: var(--alternate-color);
 }
+.button.danger {
+    background-color: var(--highlight-color);
+    border-color: var(--highlight-color);
+    color: var(--alternate-color);
+}
 
 .checkbox {
     display: flex;
@@ -242,39 +247,42 @@ kbd {
 }
 
 /*----- LINKS -----*/
-.link-out,
-.link-out-private,
-.link-out-tabs,
-.link-out-bookmark-manager {
+.link {
     display: block;
     line-height: 26px;
-    padding-right: 30px;
+    padding-right: 20px;
     color: var(--primary-color);
     opacity: 1;
     text-decoration: none;
-    background-position: calc(100% - 13px) 50%;
+    background-position: calc(100% - 2px) 50%;
     background-size: 16px 16px;
     background-repeat: no-repeat;
     will-change: opacity;
     transition: opacity 200ms ease;
 }
-.link-out:hover,
-.link-out-private:hover,
-.link-out-tabs:hover,
-.link-out-bookmark-manager:hover {
-    opacity: 0.8;
+.link:hover {
+    opacity: 0.75;
 }
 
-.link-out {
+.link {
     background-image: var(--icon-link-normal);
 }
-.link-out-private {
-    background-image: var(--icon-link-private);
-}
-.link-out-tabs {
+.link.link--newtab {
     background-image: var(--icon-link-newtab);
 }
-.link-out-bookmark-manager {
+.link.link--private {
+    background-image: var(--icon-link-private);
+}
+.link.link--open-all {
+    background-image: var(--icon-link-open-all);
+}
+.link.link--group-open-all {
+    background-image: var(--icon-link-group-open-all);
+}
+.link.link--manage-folder {
+    background-image: var(--icon-link-manage-folder);
+}
+.link.link--bookmark-manager {
     background-image: var(--icon-link-bookmark-manager);
 }
 
@@ -366,9 +374,6 @@ kbd {
 }
 .control__item--refresh {
     background-image: var(--icon-refresh);
-}
-.control__item--help {
-    background-image: var(--icon-help);
 }
 .control__item--refresh.control__item--refreshing {
     animation: refreshing 1.5s linear infinite;
@@ -675,34 +680,8 @@ aside.settings .aside__title {
     opacity: 0.8;
 }
 
-/* helps panel */
-.help__controls {
-    padding: 0;
-    margin: 0;
-    list-style: none;
-}
-
-.kbd-combination {
-    text-align: right;
-    white-space: nowrap;
-    color: var(--text-secondary);
-}
-kbd.help__refresh {
-    background-image: var(--icon-refresh);
-}
-
-#donate {
-    background-image: var(--icon-donate);
-}
-#github {
-    background-image: var(--icon-github);
-}
-
-.plugin-version {
-    display: block;
-    color: var(--text-secondary);
-    font-size: 90%;
-    margin-bottom: 15px;
+#settingOpenBookmarkManager {
+    width: 100%;
 }
 
 /* edit panel */
@@ -727,13 +706,13 @@ kbd.help__refresh {
     position: absolute;
     right: 18px;
     bottom: 10px;
-    width: 38px;
-    height: 38px;
+    width: 35px;
+    height: 35px;
     border: var(--button-border-color) 1px solid;
     background-color: var(--background-primary-color);
     background-position: 50% 50%;
     background-repeat: no-repeat;
-    background-size: 30% auto;
+    background-size: 35% auto;
     border-radius: 50%;
     cursor: pointer;
     transform: scale(0);

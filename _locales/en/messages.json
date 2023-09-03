@@ -26,14 +26,6 @@
     "setting_show_scroll_to_top_button": { "message": "Show scroll to top/buttom button" },
     "setting_link_open_bookmark_manager": { "message": "Open chrome bookmark manager" },
 
-    "helps_title": { "message": "Helps" },
-    "help_control_lmb": { "message": "Open bookmark in current tab" },
-    "help_control_rmb": { "message": "Edit bookmark or folder" },
-    "help_control_refresh": { "message": "Refresh bookmark tree and synchronize settings" },
-    "help_link_donate": { "message": "Donate" },
-    "help_link_github": { "message": "View on GitHub" },
-    "help_version": { "message": "Extension version" },
-
     "link_editor_title": { "message": "Edit Bookmark" },
     "link_editor_button_save": { "message": "Save" },
     "link_editor_button_cancel": { "message": "Cancel" },
