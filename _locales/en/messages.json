@@ -1,122 +1,51 @@
 {
-    "chrome_extension_description": {
-        "message": "Fast and simple bookmark navigation"
-    },
-    "chrome_extension_name": {
-        "message": "Bookmark Navigator"
-    },
-    "lang": {
-        "message": "en"
-    },
-    "button_rename": {
-        "message": "Rename"
-    },
-    "button_save": {
-        "message": "Save"
-    },
-    "button_cancel": {
-        "message": "Cancel"
-    },
-    "button_delete": {
-        "message": "Delete"
-    },
-    "button_close": {
-        "message": "Close"
-    },
-    "button_reset_settings": {
-        "message": "Reset to defaults"
-    },
-    "button_exit_search_mode": {
-        "message": "Exit from search mode"
-    },
-    "change_folder": {
-        "message": "Manage folder"
-    },
-    "open_folder_in_manager": {
-        "message": "Open folder in bookmark manager"
-    },
-    "open_links_in_new_tabs": {
-        "message": "Open all bookmarks in new tab"
-    },
-    "open_bookmark_in_private": {
-        "message": "Open bookmark in incognito window"
-    },
-    "title_settings": {
-        "message": "Settings"
-    },
-    "title_change_bookmark": {
-        "message": "Manage bookmark"
-    },
-    "title_controls": {
-        "message": "Controls"
-    },
-    "bookmarks_empty": {
-        "message": "Bookmark folder is empty"
-    },
-    "settings_theme": {
-        "message": "Theme"
-    },
-    "settings_theme_system": {
-        "message": "Auto (OS theme)"
-    },
-    "settings_theme_light": {
-        "message": "Light"
-    },
-    "settings_theme_dark": {
-        "message": "Dark"
-    },
-    "settings_open_links_in_new_tabs": {
-        "message": "Left click opens bookmark in new tab"
-    },
-    "settings_show_folders_path": {
-        "message": "Show folders path lines"
-    },
-    "settings_remember_scroll_position": {
-        "message": "Remember scroll position"
-    },
-    "settings_scroll_position_description": {
-        "message": "Last saved position"
-    },
-    "settings_edit_enabled": {
-        "message": "Enable editing"
-    },
-    "settings_edit_enabled_description": {
-        "message": "Right click on a bookmark or folder"
-    },
-    "settings_sort_enabled": {
-        "message": "Enable sorting"
-    },
-    "settings_show_scrollbutton": {
-        "message":"Show scroll to top/bottom button"
-    },
-    "settings_show_empty_folders": {
-        "message": "Show empty folders"
-    },
-    "help_controls_lmb": {
-        "message": "Open bookmark in current tab"
-    },
-    "help_controls_lmb_ctrl": {
-        "message": "Open bookmark in new background tab"
-    },
-    "help_controls_rmb": {
-        "message": "Edit bookmark or folder"
-    },
-    "help_controls_tab_space": {
-        "message": "Switch between bookmarks and click on it"
-    },
-    "help_controls_refresh": {
-        "message": "Refresh bookmark tree, sync settings"
-    },
-    "link_open_bookmark_manager": {
-        "message": "Open bookmark manager"
-    },
-    "search_found": {
-        "message": "Found"
-    },
-    "link_github_text": {
-        "message": "View on GitHub"
-    },
-    "version": {
-        "message": "Extension version"
-    }
+    "extension_name": { "message": "Bookmark Navigator" },
+    "extension_description": { "message": "A lightweight navigator and manager for bookmarks" },
+
+    "bookmarks_empty": { "message": "Bookmark folder is empty" },
+
+    "settings_title": { "message": "Settings" },
+    "setting_button_reset": { "message": "Reset to defaults" },
+    "setting_theme": { "message": "Theme" },
+    "setting_theme_system": { "message": "Auto (OS theme)" },
+    "setting_theme_light": { "message": "Light" },
+    "setting_theme_dark": { "message": "Dark" },
+    "setting_popup_size": { "message": "Popup size" },
+    "setting_popup_size_pattern": {"message": "Width X Height"},
+    "setting_tab_open_policy": {"message": "Link open policy"},
+    "setting_link_open_policy_newtab": {"message": "Open in newtab"},
+    "setting_link_open_policy_overwrite_all": {"message": "Overwrite current"},
+    "setting_link_open_policy_overwrite_newtab": {"message": "Overwrite newtab only"},
+    "setting_bookmark_root": {"message": "Bookmark tree root"},
+    "setting_bookmark_root_root": {"message": "Root"},
+    "setting_bookmark_root_bookmarks_bar": {"message": "Bookmarks bar"},
+    "setting_bookmark_root_other_bookmarks": {"message": "Other bookmarks"},
+    "setting_search_include_url": { "message": "Include url match while seaching" },
+    "setting_enable_double_click": { "message": "Double click to cascade toggle folder" },
+    "setting_double_click_detect_delay": { "message": "Double click detect delay (ms)" },
+    "setting_show_scroll_to_top_button": { "message": "Show scroll to top/buttom button" },
+    "setting_link_open_bookmark_manager": { "message": "Open chrome bookmark manager" },
+
+    "helps_title": { "message": "Helps" },
+    "help_control_lmb": { "message": "Open bookmark in current tab" },
+    "help_control_rmb": { "message": "Edit bookmark or folder" },
+    "help_control_refresh": { "message": "Refresh bookmark tree and synchronize settings" },
+    "help_link_donate": { "message": "Donate" },
+    "help_link_github": { "message": "View on GitHub" },
+    "help_version": { "message": "Extension version" },
+
+    "link_editor_title": { "message": "Edit Bookmark" },
+    "link_editor_button_save": { "message": "Save" },
+    "link_editor_button_cancel": { "message": "Cancel" },
+    "link_editor_button_delete": { "message": "Delete" },
+    "link_editor_open_bookmark_in_background": { "message": "Open bookmark in background" },
+    "link_editor_open_bookmark_in_private": { "message": "Open bookmark in incognito window" },
+
+    "folder_editor_title": { "message": "Edit Folder" },
+    "folder_editor_button_save": { "message": "Save" },
+    "folder_editor_button_cancel": { "message": "Cancel" },
+    "folder_editor_button_remove": { "message": "Delete" },
+    "folder_editor_open_folder_links": { "message": "Open all bookmarks in new tabs" },
+    "folder_editor_group_open_folder_links": { "message": "Open all bookmarks in new tab group" },
+    "folder_editor_open_folder_in_manager": { "message": "View folder in bookmark manager" }
 }
