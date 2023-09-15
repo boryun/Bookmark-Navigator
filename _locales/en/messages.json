@@ -3,6 +3,7 @@
     "extension_description": { "message": "A lightweight navigator and manager for bookmarks" },
 
     "bookmarks_empty": { "message": "Bookmark folder is empty" },
+    "default_folder_name": { "message": "New Folder" },
 
     "settings_title": { "message": "Settings" },
     "setting_button_reset": { "message": "Reset to defaults" },
@@ -37,6 +38,7 @@
     "folder_editor_button_save": { "message": "Save" },
     "folder_editor_button_cancel": { "message": "Cancel" },
     "folder_editor_button_remove": { "message": "Delete" },
+    "folder_editor_button_append": { "message": "+" },
     "folder_editor_open_folder_links": { "message": "Open all bookmarks in new tabs" },
     "folder_editor_group_open_folder_links": { "message": "Open all bookmarks in new tab group" },
     "folder_editor_open_folder_in_manager": { "message": "View folder in bookmark manager" }

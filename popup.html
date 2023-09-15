@@ -103,11 +103,11 @@
                     <div class="edit__field">
                         <input type="text" name="title" value="" id="linkEditorBookmarkTitle" class="with-leading-icon" tabindex="1" required />
                         <input type="url" name="url" value="" id="linkEditorBookmarkUrl" tabindex="1" required />
-                    </div>
-                    <div class="edit__row">
-                        <button id="linkEditorUpdateButton" class="button submit" type="submit" data-text="link_editor_button_save"></button>
-                        <button id="linkEditorCloseButton" class="button" type="button" data-text="link_editor_button_cancel"></button>
-                        <button id="linkEditorRemoveButton" class="button danger" type="button" data-text="link_editor_button_delete"></button>
+                        <div class="edit__buttons">
+                            <button id="linkEditorUpdateButton" class="button submit" type="submit" data-text="link_editor_button_save"></button>
+                            <button id="linkEditorCloseButton" class="button" type="button" data-text="link_editor_button_cancel"></button>
+                            <button id="linkEditorRemoveButton" class="button danger" type="button" data-text="link_editor_button_delete"></button>
+                        </div>
                     </div>
                     <div class="edit__row with-top-separator">
                         <a href="#" class="link link--newtab" id="linkEditorOpenInBackground" data-text="link_editor_open_bookmark_in_background"></a>
@@ -123,11 +123,12 @@
                 <form action="/" id="folderEditorForm">
                     <div class="edit__field">
                         <input type="text" name="title" value="" id="folderEditorFolderTitle" class="with-leading-icon" tabindex="1" required />
-                    </div>
-                    <div class="edit__row">
-                        <button id="folderEditorUpdateButton" class="button submit" type="submit" data-text="folder_editor_button_save"></button>
-                        <button id="folderEditorCloseButton" class="button" type="button" data-text="folder_editor_button_cancel"></button>
-                        <button id="folderEditorRemoveButton" class="button danger" type="button" data-text="folder_editor_button_remove"></button>
+                        <div class="edit__buttons">
+                            <button id="folderEditorUpdateButton" class="button submit" type="submit" data-text="folder_editor_button_save"></button>
+                            <button id="folderEditorCloseButton" class="button" type="button" data-text="folder_editor_button_cancel"></button>
+                            <button id="folderEditorRemoveButton" class="button danger" type="button" data-text="folder_editor_button_remove"></button>
+                            <button id="folderEditorAppendButton" class="button trivial" type="button" data-text="folder_editor_button_append"></button>
+                        </div>
                     </div>
                     <div class="edit__row with-top-separator">
                         <a href="#" class="link link--open-all" id="folderEditorOpenAll" data-text="folder_editor_open_folder_links"></a>
@@ -145,7 +146,7 @@
                 <div class="header__search"><input type="search" id="search" class="with-leading-icon" tabindex="1" /></div>
                 <div class="header__controls control">
                     <button class="control__item control__item--refresh" id="controlButtonRefresh" tabindex="3"></button>
-                    <button class="control__item control__item--settings" id="controlButtonSetting" tabindex="2"></button>
+                    <button class="control__item control__item--setting" id="controlButtonSetting" tabindex="2"></button>
                 </div>
             </div>
 

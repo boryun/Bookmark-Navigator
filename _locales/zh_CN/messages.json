@@ -3,6 +3,7 @@
     "extension_description": { "message": "一个轻量级的书签导航&管理工具" },
 
     "bookmarks_empty": { "message": "书签栏为空" },
+    "default_folder_name": { "message": "新建文件夹" },
 
     "settings_title": { "message": "设置" },
     "setting_button_reset": { "message": "恢复默认值" },
@@ -37,6 +38,7 @@
     "folder_editor_button_save": { "message": "保存" },
     "folder_editor_button_cancel": { "message": "取消" },
     "folder_editor_button_remove": { "message": "删除" },
+    "folder_editor_button_append": { "message": "+" },
     "folder_editor_open_folder_links": { "message": "在新标签页中打开全部书签" },
     "folder_editor_group_open_folder_links": { "message": "在新标签组中打开全部书签" },
     "folder_editor_open_folder_in_manager": { "message": "在Chrome书签管理器中查看" }

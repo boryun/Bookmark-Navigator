@@ -29,7 +29,7 @@ const app = {
 
         // bookmarks
         bookmark: document.getElementById("bookmarks"),
-        folders: function () { return document.querySelectorAll(".bookmarks__folder > span"); },
+        folders: function () { return document.querySelectorAll(".bookmarks__folder"); },
         links: function () { return document.querySelectorAll("[data-url]"); },
 
         // setting panel
@@ -66,6 +66,7 @@ const app = {
         folderEditorUpdateButton: document.getElementById("folderEditorUpdateButton"),
         folderEditorCloseButton: document.getElementById("folderEditorCloseButton"),
         folderEditorRemoveButton: document.getElementById("folderEditorRemoveButton"),
+        folderEditorAppendButton: document.getElementById("folderEditorAppendButton"),
         folderEditorOpenAll: document.getElementById("folderEditorOpenAll"),
         folderEditorGroupOpenAll: document.getElementById("folderEditorGroupOpenAll"),
         folderEditorManagerLink: document.getElementById("folderEditorManagerLink")
@@ -303,6 +304,7 @@ const app = {
                 let containerNode = document.createElement("li");
                 containerNode.dataset.id = id;
                 containerNode.dataset.url = url;
+                containerNode.tabIndex = "1";
                 containerNode.style.backgroundImage = "url(" + app.bookmarks.build.createFaviconUrl(url) + ")";
 
                 let titleNode = document.createElement("span");
@@ -394,11 +396,46 @@ const app = {
                         let tabIds = tabs.map((tab) => { return tab.id; });
                         if (grouping && tabIds.length > 0) {
                             chrome.tabs.group({tabIds: tabIds}).then((groupId) => {
-                                chrome.tabGroups.update(groupId, {title: data.title, color: "orange"});
+                                chrome.tabGroups.update(groupId, {title: data.title, color: "orange", collapsed: false});
                             });
                         }
                         return tabIds;
                     });
+                });
+            },
+
+            createLink: async function (element, title, url) {
+                let data = app.bookmarks.build.serializeFolderNode(element);
+                return chrome.bookmarks.create({ parentId: data.id, title:title, url: url }).then((node) => {
+                    let link = app.bookmarks.build.createLinkNode(node.id, node.title, node.url);
+                    app.bookmarks.manage._initLinkListener(link);
+                    element.children[1].appendChild(link);
+
+                    if (app.bookmarks.manage.isFolderExpanded(element)) {
+                        link.scrollIntoView({ behavior: "instant", block: "end", inline: "nearest" });
+                        link.classList.add("create-ready");
+                        link.addEventListener("animationend", (event) => {
+                            link.classList.remove("create-ready");
+                        });
+                    }
+                });
+            },
+
+            createFolder: async function(element, title) {
+                let data = app.bookmarks.build.serializeFolderNode(element);
+                return chrome.bookmarks.create({ parentId: data.id, title:title }).then((node) => {
+                    let folder = app.bookmarks.build.createFolderNode(node.id, node.title);
+                    app.bookmarks.manage._initFolderListener(folder);
+                    element.children[1].appendChild(folder);
+
+                    if (app.bookmarks.manage.isFolderExpanded(element)) {
+                        app.bookmarks.manage.expandFolder(folder);
+                        folder.scrollIntoView({ behavior: "instant", block: "end", inline: "nearest" });
+                        folder.classList.add("create-ready");
+                        folder.addEventListener("animationend", (event) => {
+                            folder.classList.remove("create-ready");
+                        });
+                    }
                 });
             },
 
@@ -473,54 +510,62 @@ const app = {
                 app.settings.set("openedFolders", openedFolders);
             },
 
-            initListener: function () {
-                app.dom.folders().forEach((folder) => {
-                    // expand or collapse folder
-                    var clickTimeout = -1;
-                    folder.addEventListener("click", (event) => {
-                        if (app.bookmarks.search.isSearching()) { return; }
-                        let expanded = app.bookmarks.manage.isFolderExpanded(folder.parentNode);
-                        let handler = expanded ? app.bookmarks.manage.collapseFolder : app.bookmarks.manage.expandFolder;
+            _initFolderListener: function (folder) {
+                folder = folder.children[0];  // relocate to folder span
 
-                        if(!app.settings.get("enableDoubleClick")) {
-                            handler(folder.parentNode, false);
+                // expand or collapse folder
+                var clickTimeout = -1;
+                folder.addEventListener("click", (event) => {
+                    if (app.bookmarks.search.isSearching()) { return; }
+                    let expanded = app.bookmarks.manage.isFolderExpanded(folder.parentNode);
+                    let handler = expanded ? app.bookmarks.manage.collapseFolder : app.bookmarks.manage.expandFolder;
+
+                    if(!app.settings.get("enableDoubleClick")) {
+                        handler(folder.parentNode, false);
+                    }
+                    else {
+                        if (clickTimeout <= 0) {
+                            clickTimeout = setTimeout(function () {
+                                clickTimeout = -1;
+                                handler(folder.parentNode, false);
+                            }, app.settings.get("doubleClickDetectDelay"));
                         }
                         else {
-                            if (clickTimeout <= 0) {
-                                clickTimeout = setTimeout(function () {
-                                    clickTimeout = -1;
-                                    handler(folder.parentNode, false);
-                                }, app.settings.get("doubleClickDetectDelay"));
-                            }
-                            else {
-                                clearTimeout(clickTimeout);
-                                clickTimeout = -1;
-                                handler(folder.parentNode, true);
-                            }
+                            clearTimeout(clickTimeout);
+                            clickTimeout = -1;
+                            handler(folder.parentNode, true);
                         }
-                    });
-
-                    // folder edit panel
-                    folder.addEventListener("contextmenu", (event) => {
-                        event.preventDefault();
-                        if (app.bookmarks.search.isSearching()) { return; }
-                        app.asides.folderEditor.prepare(folder.parentNode);
-                    });
+                    }
                 });
 
-                app.dom.links().forEach((link) => {
-                    // open link
-                    link.addEventListener("click", (event) => {
-                        app.bookmarks.manage.openLink(link);
-                        window.close();
-                    });
-
-                    // link edit panel
-                    link.addEventListener("contextmenu", (event) => {
-                        event.preventDefault();
-                        app.asides.linkEditor.prepare(link);
-                    });
+                // folder edit panel
+                folder.addEventListener("contextmenu", (event) => {
+                    event.preventDefault();
+                    if (app.bookmarks.search.isSearching()) { return; }
+                    app.asides.folderEditor.prepare(folder.parentNode);
                 });
+            },
+
+            _initLinkListener: function (link) {
+                // open link
+                link.addEventListener("click", (event) => {
+                    app.bookmarks.manage.openLink(link);
+                    window.close();
+                });
+                link.addEventListener("keypress", (event) => {
+                    if (event.which == 13) { event.target.click(); }
+                })
+
+                // link edit panel
+                link.addEventListener("contextmenu", (event) => {
+                    event.preventDefault();
+                    app.asides.linkEditor.prepare(link);
+                });
+            },
+
+            initListener: function () {
+                app.dom.folders().forEach((folder) => { app.bookmarks.manage._initFolderListener(folder); });
+                app.dom.links().forEach((link) => { app.bookmarks.manage._initLinkListener(link); });
             }
         },
 
@@ -539,7 +584,7 @@ const app = {
 
                     app.dom.bookmark.classList.add("bookmarks--searching");
                     app.dom.folders().forEach((folder) => {
-                        folder.parentNode.classList.add("bookmarks__folder--temp-opened");
+                        folder.classList.add("bookmarks__folder--temp-opened");
                     });
 
                     app.styles.adjustHeight();
@@ -550,7 +595,7 @@ const app = {
 
                     app.dom.bookmark.classList.remove("bookmarks--searching");
                     app.dom.folders().forEach((folder) => {
-                        folder.parentNode.classList.remove("bookmarks__folder--temp-opened");
+                        folder.classList.remove("bookmarks__folder--temp-opened");
                     });
 
                     app.styles.adjustHeight();
@@ -673,6 +718,15 @@ const app = {
                 app.dom.bookmark.scrollTo({ top: offset, behavior: behavior || "auto" });
             },
 
+            saveScrolledPosition: function () {
+                if (app.bookmarks.search.isSearching()) { return; }
+                app.settings.set("scrollPosition", app.dom.bookmark.scrollTop, 150);
+            },
+
+            scrollToSavedPosition: function () {
+                app.bookmarks.scroll.scrollTo(app.settings.get("scrollPosition"), "instant");
+            },
+
             adjustScrollButton: function () {
                 let windowSize = app.dom.bookmark.offsetHeight;
                 let globalSize = app.dom.bookmark.scrollHeight;
@@ -704,15 +758,6 @@ const app = {
                     let bottom = app.dom.bookmark.scrollHeight - app.dom.bookmark.offsetHeight;
                     app.bookmarks.scroll.scrollTo(bottom, "smooth");
                 }
-            },
-
-            saveScrolledPosition: function () {
-                if (app.bookmarks.search.isSearching()) { return; }
-                app.settings.set("scrollPosition", app.dom.bookmark.scrollTop, 150);
-            },
-
-            scrollToSavedPosition: function () {
-                app.bookmarks.scroll.scrollTo(app.settings.get("scrollPosition"), "instant");
             },
 
             initListener: function () {
@@ -935,7 +980,6 @@ const app = {
                         let title = app.dom.linkEditorBookmarkTitle.value;
                         let url = app.dom.linkEditorBookmarkUrl.value;
                         app.bookmarks.manage.updateLink(element, title, url).then(() => {
-                            app.asides.linkEditor.sourceElement = null;
                             app.asides.linkEditor.closePanel();
                         });
                     }
@@ -1037,7 +1081,6 @@ const app = {
                     if (element) {
                         let title = app.dom.folderEditorFolderTitle.value;
                         app.bookmarks.manage.updateFolder(element, title).then(() => {
-                            app.asides.folderEditor.sourceElement = null;
                             app.asides.folderEditor.closePanel();
                         });
                     }
@@ -1049,6 +1092,17 @@ const app = {
                     if (element) {
                         app.bookmarks.manage.removeFolder(element);
                         app.asides.folderEditor.closePanel();
+                    }
+                });
+
+                // create sub folder
+                app.dom.folderEditorAppendButton.addEventListener("click", (event) => {
+                    let element = app.asides.folderEditor.sourceElement;
+                    if (element) {
+                        let title = app.getI18n("default_folder_name");
+                        app.bookmarks.manage.createFolder(element, title).then(() => {
+                            app.asides.folderEditor.closePanel();
+                        });
                     }
                 });
 
@@ -1108,7 +1162,6 @@ const app = {
         });
     },
 
-    /* 以下为测试部分 */
     init: function () {
         app.i18n();
         app.settings.init().then(() => {

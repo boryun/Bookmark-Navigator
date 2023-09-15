@@ -157,7 +157,8 @@ kbd {
     outline: none;
     cursor: pointer;
     font-size: inherit;
-    transition: background-color 250ms ease, border-color 250px ease;
+    will-change: background-color, border-color, opacity;
+    transition: background-color 250ms ease, border-color 250ms ease, opacity 250ms ease;
 }
 .button:hover {
     background-color:var(--button-hover-background);
@@ -172,6 +173,12 @@ kbd {
     background-color: var(--highlight-color);
     border-color: var(--highlight-color);
     color: var(--alternate-color);
+}
+.button.trivial {
+    opacity: 0.4;
+}
+.button.trivial:hover {
+    opacity: 1.0;
 }
 
 .checkbox {
@@ -204,6 +211,7 @@ kbd {
     background-color: var(--input-checkbox-circle-background);
     box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.4);
     border-radius: 50%;
+    will-change: transform, box-shadow;
     transition: transform 150ms ease-out, box-shadow 150ms ease;
 }
 .checkbox > label::after {
@@ -214,6 +222,7 @@ kbd {
     height: 12px;
     background-color: var(--input-checkbox-bar-background);
     border-radius: 13px;
+    will-change: background-color;
     transition: background-color 250ms ease-out;
 }
 .checkbox > input:checked + label::before {
@@ -369,7 +378,7 @@ kbd {
     background-color: var(--control-background) !important;
 }
 
-.control__item--settings {
+.control__item--setting {
     background-image: var(--icon-setting);
 }
 .control__item--refresh {
@@ -516,17 +525,30 @@ kbd {
     transform: translateX(-33%);
 }
 
+.bookmarks li.create-ready,
+.bookmarks ul.create-ready {
+    opacity: 0;
+    animation-fill-mode:  forwards;
+    animation-delay: 300ms;
+    animation-duration: 300ms;
+    animation-name: createNode;
+}
+@keyframes createNode {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
 .bookmarks li.remove-ready,
 .bookmarks ul.remove-ready {
+    opacity: 1;
     animation-fill-mode: forwards;
     animation-delay: 200ms;
     animation-duration: 300ms;
     animation-name: removedNode;
 }
 @keyframes removedNode {
-    to {
-        opacity: 0;
-    }
+    from { opacity: 1; }
+    to { opacity: 0; }
 }
 
 .bookmarks.bookmarks--searching li.bookmarks__folder > span,
@@ -554,7 +576,7 @@ kbd {
 }
 
 /*----- ASIDES -----*/
-aside{
+aside {
     width:100%;
     max-height: 490px;
     overflow: auto;
@@ -696,6 +718,16 @@ aside.settings .aside__title {
 .edit__field > :not(:first-child) {
     margin-top: 10px;
 }
+.edit__buttons {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    column-gap: 10px;
+    flex-wrap: wrap;
+    gap: 5px 5px;
+}
 
 #folderEditorFolderTitle {
     background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 58 58"><path fill="rgb(239,206,74)" d="M55.981,54.5H2.019C0.904,54.5,0,53.596,0,52.481V20.5h58v31.981C58,53.596,57.096,54.5,55.981,54.5z"/><path fill="rgb(235,186,22)" d="M26.019,11.5V5.519C26.019,4.404,25.115,3.5,24,3.5H2.019C0.904,3.5,0,4.404,0,5.519V10.5v10h58v-6.981c0-1.115-0.904-2.019-2.019-2.019H26.019z"/></svg>');
@@ -716,6 +748,7 @@ aside.settings .aside__title {
     border-radius: 50%;
     cursor: pointer;
     transform: scale(0);
+    will-change: transform;
     transition: transform 350ms cubic-bezier(0.175, 0.885, 0.32, 1.275), background-color 250ms ease, border-color 250ms ease;
     background-image: var(--icon-scroller-arrow);
 }
