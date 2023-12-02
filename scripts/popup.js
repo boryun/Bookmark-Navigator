@@ -257,7 +257,7 @@ const app = {
             return app.bookmarks.build.build().then(() => {
                 app.bookmarks.manage.initListener();
                 app.bookmarks.search.initListener();
-                app.bookmarks.sort.createSortables();
+                app.bookmarks.sort.initSortables();
             });
         },
 
@@ -287,14 +287,14 @@ const app = {
             buildTree: function (root) {
                 let listNode = document.createElement("ul");
                 root.children.forEach((node) => {
-                    if (node.children) {
+                    if (node.url) {
+                        let linkNode = app.bookmarks.build.createLinkNode(node.id, node.title, node.url);
+                        listNode.appendChild(linkNode);
+                    }
+                    else {
                         let folderNode = app.bookmarks.build.createFolderNode(node.id, node.title);
                         folderNode.appendChild(app.bookmarks.build.buildTree(node));
                         listNode.appendChild(folderNode);
-                    }
-                    else if (node.url) {
-                        let linkNode = app.bookmarks.build.createLinkNode(node.id, node.title, node.url);
-                        listNode.appendChild(linkNode);
                     }
                 });
                 return listNode;
@@ -374,7 +374,7 @@ const app = {
                     return chrome.tabs.create({url: data.url, active: true});
                 }
                 else {
-                    return chrome.tabs.query({active: true}).then((result) => {
+                    return chrome.tabs.query({active: true, currentWindow: true}).then((result) => {
                         if (result.length == 0 || (policy == "2" && result[0].url != "chrome://newtab/")) {
                             return chrome.tabs.create({url: data.url, active: true});
                         }
@@ -425,7 +425,10 @@ const app = {
                 let data = app.bookmarks.build.serializeFolderNode(element);
                 return chrome.bookmarks.create({ parentId: data.id, title:title }).then((node) => {
                     let folder = app.bookmarks.build.createFolderNode(node.id, node.title);
+                    let folderList = document.createElement("ul");
+                    folder.appendChild(folderList);
                     app.bookmarks.manage._initFolderListener(folder);
+                    app.bookmarks.sort.createSortable(folderList);
                     element.children[1].appendChild(folder);
 
                     if (app.bookmarks.manage.isFolderExpanded(element)) {
@@ -470,6 +473,12 @@ const app = {
             removeFolder: async function (element) {
                 let data = app.bookmarks.build.serializeFolderNode(element);
                 return chrome.bookmarks.removeTree(data.id).then(() => {
+                    app.bookmarks.sort.removeSortable(element.children[1]);
+                    let openedFolders = app.settings.get("openedFolders");
+                    let idx = openedFolders.indexOf(data.id);
+                    if (idx >= 0) { openedFolders.splice(idx, 1); }
+                    app.settings.set("openedFolders", openedFolders);
+
                     element.classList.add("remove-ready");
                     element.addEventListener("animationend", (event) => {
                         event.target.remove();
@@ -657,58 +666,80 @@ const app = {
 
             sortables: [],
 
-            createSortables: function () {
-                let sortables = app.bookmarks.sort.sortables;
-                for (let i in sortables) { sortables[i].destroy(); }
-                sortables.splice(0);
+            initSortables: function () {
+                app.bookmarks.sort.removeAllSortables();
+                app.dom.bookmark.querySelectorAll("ul").forEach((list) => {
+                    app.bookmarks.sort.createSortable(list);
+                });
+            },
+
+            createSortable(listElement) {
+                var folderId = listElement.parentNode.dataset.id;
+                if (folderId ===  undefined) { folderId = 0; }
 
                 var sourceParentId = -1;
                 let bookmarkRoot = app.settings.get("bookmarkRoot");
-                app.dom.bookmark.querySelectorAll("ul").forEach((list) => {
-                    sortables.push(Sortable.create(list, {
-                        group: "bookmarks_container",
-                        animation: 150,
-                        filter: "li[data-id=\"1\"], li[data-id=\"2\"]",  // disable sort for root
-                        ghostClass: "sortable-ghost",  // class name of drop placeholder
-	                    chosenClass: "sortable-chosen",  // class name of chosen item
-	                    dragClass: "sortable-drag",  // class name of dragging item
-                        direction: "vertical",
-                        swapThreshold: 0.75,
-                        onStart: (event) => {
-                            sourceParentId = event.from.parentNode.dataset.id;
-                            if (sourceParentId === undefined) { sourceParentId = bookmarkRoot; }
-                        },
-                        onMove: (event) => {
-                            let target = event.to.parentNode;
-                            if (target.dataset.id === undefined) {
-                                if (target === app.dom.bookmark) { return bookmarkRoot != "0"; }
-                                else { return false; }
-                            }
-                            return true;
-                        },
-                        onEnd: (event) => {
-                            let itemId = event.item.dataset.id;
-                            let targetParentId =
-                                event.to.parentNode.dataset.id === undefined ?
-                                bookmarkRoot : event.to.parentNode.dataset.id;
-                            let targetIndex =
-                                (sourceParentId == targetParentId && event.newIndex > event.oldIndex)
-                                ? event.newIndex + 1 : event.newIndex;
 
-                            chrome.bookmarks.move(
-                                itemId, { parentId:  targetParentId, index: targetIndex }
-                            ).then(() => {
-                                app.bookmarks.sort.isSorting = false;
-                            })
+                app.bookmarks.sort.sortables.push(Sortable.create(listElement, {
+                    group: "bookmarks_container",
+                    animation: 150,
+                    filter: "li[data-id=\"1\"], li[data-id=\"2\"]",  // disable sort for root
+                    ghostClass: "sortable-ghost",  // class name of drop placeholder
+                    chosenClass: "sortable-chosen",  // class name of chosen item
+                    dragClass: "sortable-drag",  // class name of dragging item
+                    direction: "vertical",
+                    swapThreshold: 0.75,
+                    onStart: (event) => {
+                        sourceParentId = event.from.parentNode.dataset.id;
+                        if (sourceParentId === undefined) { sourceParentId = bookmarkRoot; }
+                    },
+                    onMove: (event) => {
+                        let target = event.to.parentNode;
+                        if (target.dataset.id === undefined) {
+                            if (target === app.dom.bookmark) { return bookmarkRoot != "0"; }
+                            else { return false; }
                         }
-                    }));
-                });
+                        return true;
+                    },
+                    onEnd: (event) => {
+                        let itemId = event.item.dataset.id;
+                        let targetParentId =
+                            event.to.parentNode.dataset.id === undefined ?
+                            bookmarkRoot : event.to.parentNode.dataset.id;
+                        let targetIndex =
+                            (sourceParentId == targetParentId && event.newIndex > event.oldIndex)
+                            ? event.newIndex + 1 : event.newIndex;
+
+                        chrome.bookmarks.move(
+                            itemId, { parentId: targetParentId, index: targetIndex }
+                        ).then(() => {
+                            app.bookmarks.sort.isSorting = false;
+                        })
+                    }
+                }));
+            },
+
+            removeSortable(element) {
+                let sortables = app.bookmarks.sort.sortables;
+                for (let i in sortables) {
+                    if (sortables[i].el.isSameNode(element)) {
+                        sortables[i].destroy();
+                        sortables.splice(i,1);
+                        break;
+                    }
+                }
+            },
+
+            removeAllSortables() {
+                let sortables = app.bookmarks.sort.sortables;
+                for (let i in sortables) { sortables[i].destroy(); }
+                sortables.splice(0);
             },
 
             toggleAvailability(enable) {
                 let sortables = app.bookmarks.sort.sortables;
                 for (let i in sortables) { sortables[i].option("disabled", !enable); }
-            },
+            }
         },
 
         scroll: {
@@ -1156,7 +1187,7 @@ const app = {
         app.styles.refresh();
         return app.bookmarks.build.build().then(() => {
             app.bookmarks.manage.initListener();
-            app.bookmarks.sort.createSortables();
+            app.bookmarks.sort.initSortables();
             app.styles.adjustHeight(app.asides.currentSize());
             app.headerControls.refreshButton.stopAnimation();
         });
