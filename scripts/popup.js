@@ -258,6 +258,7 @@ const app = {
                 app.bookmarks.manage.initListener();
                 app.bookmarks.search.initListener();
                 app.bookmarks.sort.initSortables();
+                app.bookmarks.scroll.adjustScrollButton();
             });
         },
 
@@ -965,7 +966,9 @@ const app = {
                 // show scroll-top-top button
                 app.dom.settingShowScrollToTopButton.addEventListener("change", (event) => {
                     let checked = event.target.checked;
-                    app.settings.set("showScrollButton", checked);
+                    app.settings.set("showScrollButton", checked, 0, () => {
+                        app.bookmarks.scroll.adjustScrollButton();
+                    });
                 });
             }
         },
